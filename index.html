@@ -1,41 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Be My Valentine 💖</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>Be My Valentine ❤️</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      width: 320px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      z-index: 2;
+    }
+
+    h1 {
+      color: #ff4d6d;
+    }
+
+    p {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    #yesBtn {
+      background-color: #ff4d6d;
+      color: white;
+    }
+
+    #noBtn {
+      background-color: #ddd;
+      position: absolute;
+    }
+
+    #celebrate {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #celebrate img {
+      width: 260px;
+      border-radius: 15px;
+      margin-top: 15px;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
 </head>
+
 <body>
 
-  <!-- Floating Hearts -->
-  <div class="hearts"></div>
+<canvas id="confetti"></canvas>
 
-  <div class="card" id="main">
-    <h1>Hey my love 💗</h1>
-    <p>
-      Out of all the moments, smiles, and little memories we share,  
-      this one matters to me the most.
-    </p>
+<div class="card">
+  <h1>Hey Love ❤️</h1>
+  <p>
+    Out of all the moments, smiles, and little memories we share,  
+    this one matters to me the most.
+  </p>
 
-    <h2>Will you be my Valentine? 🌹</h2>
+  <h2>Will you be my Valentine? 💘</h2>
 
-    <div class="buttons">
-      <button id="yesBtn">Yes 💖</button>
-      <button id="noBtn">No 🙈</button>
-    </div>
+  <button id="yesBtn" onclick="yesClicked()">Yes</button>
+  <button id="noBtn" onmouseover="moveNo()">No</button>
+
+  <div id="celebrate">
+    <h2>YAYYYY 😭❤️</h2>
+    <p>Best decision ever.  
+    You’re officially my Valentine 😌💍</p>
+
+    <img src="https://media.tenor.com/0AVbG2P4ZpYAAAAC/happy-dance-love.gif" alt="happy meme">
   </div>
+</div>
 
-  <div class="card hidden" id="yesScreen">
-    <h1>OHHHH NOICEEEE 😎🔥</h1>
-    <p>
-      Best decision ever 💘  
-      I can’t wait to celebrate us.
-    </p>
+<audio id="bgMusic" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
 
-    <img src="https://media.giphy.com/media/3o6Zt6ML6BklcajjsA/giphy.gif" alt="ohhh noice meme">
-  </div>
+<script>
+  /* YES CLICK */
+  function yesClicked() {
+    document.getElementById("celebrate").style.display = "block";
 
-  <script src="script.js"></script>
+    const music = document.getElementById("bgMusic");
+    music.volume = 0.3;
+    music.play();
+
+    startConfetti();
+  }
+
+  /* NO BUTTON RUN AWAY 😈 */
+  function moveNo() {
+    const noBtn = document.getElementById("noBtn");
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 50);
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+  }
+
+  /* 🎉 CONFETTI */
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let confetti = [];
+
+  function startConfetti() {
+    confetti = [];
+    for (let i = 0; i < 180; i++) {
+      confetti.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 6 + 2,
+        d: Math.random() * 6 + 2,
+        color: `hsl(${Math.random() * 360}, 100%, 70%)`
+      });
+    }
+    animate();
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    confetti.forEach(c => {
+      ctx.beginPath();
+      ctx.fillStyle = c.color;
+      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      c.y += c.d;
+      if (c.y > canvas.height) c.y = 0;
+    });
+
+    requestAnimationFrame(animate);
+  }
+</script>
+
 </body>
 </html>
